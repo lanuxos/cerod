@@ -18,7 +18,7 @@ def Oil():
 	resq = requests.get(imgurl)
 	result = resq.content
 	# image = Image.open(BytesIO(result))
-
+	# ocrlao=pytesseract.image_to_string(Image.open(BytesIO(result)), lang='lao')
 	ocrlao=pytesseract.image_to_string(Image.open(BytesIO(result)), lang='Laos')
 	# ocrlao=pytesseract.image_to_string(Image.open('../asset/oil.jpg'), lang='Laos')
 	linebreak = ocrlao.split('\n')
@@ -29,13 +29,18 @@ def Oil():
 		if len(list(lb))>57:
 			pipe = lb.replace('|','')
 			clean = pipe.split(' ')[-7:]
+			print(clean)
+			print('---')
 			if len(clean[1]) > 0:
 				price.append({'pro':clean[0],'old95':clean[1],'new95':clean[2],'old91':clean[3],'new91':clean[4],'olddie':clean[5],'newdie':clean[6]})
 				# price.append(clean)
+	for p in price:
+		print(p)
+	print('----')
 	for i,j in zip(pro, price):
 		j['pro'] = i
+	for p in price:
+		print(p)
 	return price
-	# for p in price:
-	# 	print(p)
-
-print(Oil())
+Oil()
+# print(Oil())

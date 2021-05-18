@@ -9,68 +9,129 @@ import requests, time, os, datetime
 from io import BytesIO
 from PIL import ImageTk, Image
 import pytesseract, csv
+from urllib.request import urlopen
 
 ##### DATA SCRAPPING #####
 
 def Rate(event=None):
+	initTable1 = table1.insert('', 'end', value=('-', '-', '-'))
 	url = 'https://bcel.com.la/bcel/exchange-rate.html'
 	try:
+		progress1['value'] = 0
+		root.update()
 		rawdata = requests.get(url)
+		progress1['value'] = 10
+		root.update()	
 		rawdata = rawdata.content
-
+		progress1['value'] = 20
+		root.update()	
 		data = BeautifulSoup(rawdata, 'html.parser')
+		progress1['value'] = 30
+		root.update()
 		currency = data.find_all('td', {'data-title':u'ປະເພດສະກຸນເງິນ'})
+		progress1['value'] = 40
+		root.update()
 		codes = data.find_all('td', {'data-title':u'ລະຫັດສະກຸນເງິນ'})
+		progress1['value'] = 50
+		root.update()
 		buy = data.find_all('td', {'data-title':'NOTE'})
+		progress1['value'] = 60
+		root.update()
 		sell = data.find_all('td', {'data-title':u'ອັດຕາຂາຍ'})
+		progress1['value'] = 70
+		root.update()	
 		result = []
 		for cu, co, bu, se in zip(currency, codes, buy, sell):
 			result.append({'currency': cu.text.strip(), 'codes': co.text.strip(), 'buy': bu.text.strip(), 'sell': se.text.strip()})
+		progress1['value'] = 80
+		root.update()	
 		table1.delete(*table1.get_children())
+		progress1['value'] = 90
+		root.update()
 		for r in result:
 			final = table1.insert('', 'end', value=(r['currency'], r['buy'], r['sell']))
+		progress1['value'] = 100
+		root.update()
 	except:
 		table1.delete(*table1.get_children())
 		final = table1.insert('', 'end', value=('-', '-', '-'))
-		messagebox.showinfo('ເກີດຂໍ້ຜິດພາດ', 'ເກີດຂໍ້ຜິດພາດໃນການດຶງຂໍ້ມູນ ກະລຸນາກວດສອບການເຊື່ອມຕໍ່ອິນເຕີເນັດຂອງທ່ານແລ້ວລອງໃໝ່ອີກຄັ້ງ')
+		messagebox.showinfo('ເກີດຂໍ້ຜິດພາດ', 'ເກີດຂໍ້ຜິດພາດໃນການດຶງຂໍ້ມູນອັດຕາແລກປ່ຽນ ກະລຸນາກວດສອບການເຊື່ອມຕໍ່ອິນເຕີເນັດຂອງທ່ານແລ້ວລອງໃໝ່ອີກຄັ້ງ')
 
 def Oil(event=None):
+	initTable2 = table2.insert('', 'end', value=('-', '-', '-','-', '-', '-','-'))
 	try:
+		progress2['value'] = 0
+		root.update()
 		url = 'http://www.petrotradelaos.com/en/news/gas-price-data.html'
 		rawdata = requests.get(url)
+		progress2['value'] = 10
+		root.update()
 		rawdata = rawdata.content
+		progress2['value'] = 20
+		root.update()
 		base = 'http://www.petrotradelaos.com/'
 		imgsoup = BeautifulSoup(rawdata, 'html.parser')
+		progress2['value'] = 30
+		root.update()
 		div = imgsoup.find('div', {'itemprop': 'articleBody'})
+		progress2['value'] = 40
+		root.update()
 		imgtag = div.find('img')
+		progress2['value'] = 50
+		root.update()
 		imgurl = base + imgtag['src'][1:]
 		imgdate = imgtag['src'][8:18]
 		date = imgtag['src'][8:18]
 		date = f'ລາຄານ້ຳມັນວັນທີ {date}'
+		progress2['value'] = 55
+		root.update()
 		resq = requests.get(imgurl)
+		progress2['value'] = 60
+		root.update()
 		result = resq.content
-		ocrlao=pytesseract.image_to_string(Image.open(BytesIO(result)), lang='Laos')
+		progress2['value'] = 70
+		root.update()
+		# ocrlao=pytesseract.image_to_string(Image.open(BytesIO(result)), lang='Laos')
+		ocrlao=pytesseract.image_to_string(Image.open(BytesIO(result)), lang='lao')
 		linebreak = ocrlao.split('\n')
+		progress2['value'] = 80
+		root.update()
 		price=[]
-		pro = ['ນະຄອນຫລວງວຽງຈັນ', 'ຜົ້ງສາລີ', 'ຫລວງນ້ຳທາ', 'ອຸດົມໄຊ', 'ບໍ່ແກ້ວ', 'ຫລວງພຣະບາງ', 'ໄຊຍະບູລີ', 'ຫົວພັນ', 'ຊຽງຂວາງ', 'ວຽງຈັນ', 'ບໍລິຄຳໄຊ', 'ຄຳມ່ວນ', 'ສະຫວັນນະເຂດ', 'ສາລະວັນ', 'ຈຳປາສັກ', 'ເຊກອງ', 'ອັດຕະປື', 'ໄຊສົມບູນ']
+		# pro = ['ນະຄອນຫລວງວຽງຈັນ', 'ຜົ້ງສາລີ', 'ຫລວງນ້ຳທາ', 'ອຸດົມໄຊ', 'ບໍ່ແກ້ວ', 'ຫລວງພຣະບາງ', 'ໄຊຍະບູລີ', 'ຫົວພັນ', 'ຊຽງຂວາງ', 'ວຽງຈັນ', 'ບໍລິຄຳໄຊ', 'ຄຳມ່ວນ', 'ສະຫວັນນະເຂດ', 'ສາລະວັນ', 'ຈຳປາສັກ', 'ເຊກອງ', 'ອັດຕະປື', 'ໄຊສົມບູນ']
 		# pros = ['VT','PH','LM','OU','BK','LP','XA','HO','XI','VI','BL','KH','SV','SL','CH','XE','AT','XS',]
 		for lb in linebreak:
 			if len(list(lb))>57:
 				pipe = lb.replace('|','')
 				clean = pipe.split(' ')[-7:]
 				if len(clean[1]) > 0:
+					if clean[0] == 'ຫຼວງພະບາ]':
+						clean[0] = 'ຫຼວງພຣະບາງ'
+					elif clean[0] == 'ເຊກອງ]':
+						clean[0] = 'ເຊກອງ'
+					elif clean[0] == 'ຜົ່ງສາລີ':
+						clean[0] = 'ຜົ້ງສາລີ'
+					elif clean[0] == 'ຮັດຕະປື':
+						clean[0] = 'ອັດຕະປື'
+					elif clean[0] == 'ໄຊສົມບຸນ':
+						clean[0] = 'ໄຊສົມບູນ'
+					elif clean[0] == 'ຊຽງຂວາ]' or clean[0] == 'ຊຽງຂວາງ]':
+						clean[0] = 'ຊຽງຂວາງ'
 					price.append({'pro':clean[0],'old95':clean[1],'new95':clean[2],'old91':clean[3],'new91':clean[4],'olddie':clean[5],'newdie':clean[6]})
-		for i,j in zip(pro, price):
-			j['pro'] = i
+		# for i,j in zip(pro, price):
+		# 	j['pro'] = i
 		# print(price)
+		progress2['value'] = 90
+		root.update()
 		table2.delete(*table2.get_children())
 		for p in price:
 			final = table2.insert('', 'end', value=(p['pro'],p['old95'],p['new95'],p['old91'],p['new91'],p['olddie'],p['newdie']))
+		progress2['value'] = 100
+		root.update()
 		return date
 	except:
 		table2.delete(*table2.get_children())
 		final = table2.insert('', 'end', value=('-', '-', '-','-', '-', '-','-'))
-		messagebox.showinfo('ເກີດຂໍ້ຜິດພາດ', 'ເກີດຂໍ້ຜິດພາດໃນການດຶງຂໍ້ມູນ ກະລຸນາກວດສອບການເຊື່ອມຕໍ່ອິນເຕີເນັດຂອງທ່ານແລ້ວລອງໃໝ່ອີກຄັ້ງ')
+		messagebox.showinfo('ເກີດຂໍ້ຜິດພາດ', 'ເກີດຂໍ້ຜິດພາດໃນການດຶງຂໍ້ມູນລາຄານ້ຳມັນ ກະລຸນາກວດສອບການເຊື່ອມຕໍ່ອິນເຕີເນັດຂອງທ່ານແລ້ວລອງໃໝ່ອີກຄັ້ງ')
 # def Oil():
 # 	url = 'http://www.petrotradelaos.com/en/news/gas-price-data.html'
 
@@ -154,6 +215,18 @@ tab.pack(fill=BOTH, expand=1)
 style1 = ttk.Style(tab)
 style1.configure("TNotebook.Tab", font=laofont)
 
+pstyle1 = ttk.Style(root)
+pstyle1.theme_use('alt')
+pstyle1.configure("green.Horizontal.TProgressbar", foreground='green', background='green')
+progress1 = ttk.Progressbar(t1, length=500, cursor='spider', mode="determinate", orient=HORIZONTAL, style="green.Horizontal.TProgressbar")
+progress1.pack(pady=5)
+
+pstyle2 = ttk.Style(root)
+pstyle2.theme_use('alt')
+pstyle2.configure("green.Horizontal.TProgressbar", foreground='green', background='green')
+progress2 = ttk.Progressbar(t2, length=500, cursor='spider', mode="determinate", orient=HORIZONTAL, style="green.Horizontal.TProgressbar")
+progress2.pack(pady=5)
+
 b1 = ttk.Button(t1, text='Refresh', command=Rate)
 b1.pack(pady=5, ipadx=10, ipady=5)
 v_l1 = StringVar()
@@ -178,8 +251,6 @@ table1.heading('buy',text='ລາຄາຊື້')
 table1.column('buy', width=200, anchor="e")
 table1.heading('sell',text='ລາຄາຂາຍ')
 table1.column('sell', width=200, anchor="e")
-
-r = Rate()
 
 b2 = ttk.Button(t2, text='Refresh', command=Oil)
 b2.pack(pady=5, ipadx=10, ipady=5)
@@ -213,8 +284,17 @@ table2.column('olddie', width=120, anchor="e")
 table2.heading('newdie',text='ກາຊວນ ໃໝ່')
 table2.column('newdie', width=120, anchor="e")
 
-o = Oil()
-v_l2.set(f'ກົດປຸ່ມ Refresh ຫລື F5 (ເທິງແປ້ນພິມ) ເພື່ອອັບເດດລາຄານ້ຳມັນລ່າສຸດ ({o})')
+def Connection():
+	try:
+		check = urlopen('http://www.google.com', timeout=1).read()
+		r = Rate()
+		o = Oil()
+		v_l2.set(f'ກົດປຸ່ມ Refresh ຫລື F6 (ເທິງແປ້ນພິມ) ເພື່ອອັບເດດລາຄານ້ຳມັນລ່າສຸດ ({o})')
+	except:
+		messagebox.showerror('ເກີດຂໍ້ຜິດພາດ', 'ບໍ່ສາມາດເຊື່ອມຕໍ່ອິນເຕີເນັດໄດ້ ກະລຸນາກວດສອບການເຊື່ອມຕໍ່ອິນເຕີເນັດຂອງທ່ານ')
+# print(Connection())
+Connection()
+
 # try:
 # 	v_oil_date = StringVar()
 # 	rawimg = Oil()
@@ -243,4 +323,5 @@ v_l2.set(f'ກົດປຸ່ມ Refresh ຫລື F5 (ເທິງແປ້ນ�
 
 root.bind('<Escape>', lambda x: root.destroy())
 root.bind('<F5>', Rate)
+root.bind('<F6>', Oil)
 root.mainloop()
