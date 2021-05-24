@@ -154,7 +154,7 @@ def Oil(event=None):
 root = Tk()
 root.geometry('1024x768')  # 1600x1200	4:3	# 1280x800 16:9	# 1280x720
 root.title('CEROD')
-root.iconbitmap('ICON.ico')
+root.iconbitmap('exchange.ico')
 
 laofont = ('Defago Noto Sans', 14)
 engfont = ('Times New Roman', 14)
