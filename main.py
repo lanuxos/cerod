@@ -106,11 +106,13 @@ def Oil(event=None):
 				if len(clean[1]) > 0:
 					if clean[0] == 'ຫຼວງພະບາ]':
 						clean[0] = 'ຫຼວງພຣະບາງ'
+					elif clean[0] == 'ຫຼວງນໍາທາ':
+						clean[0] = 'ຫຼວງນ້ຳທາ'
 					elif clean[0] == 'ເຊກອງ]':
 						clean[0] = 'ເຊກອງ'
-					elif clean[0] == 'ຜົ່ງສາລີ':
+					elif clean[0] == 'ຜົ່ງສາລີ' or clean[0] == 'ຜືງສາລີ':
 						clean[0] = 'ຜົ້ງສາລີ'
-					elif clean[0] == 'ຮັດຕະປື':
+					elif clean[0] == 'ຮັດຕະປື' or clean[0] == 'ຮ໌ດຕະປື':
 						clean[0] = 'ອັດຕະປື'
 					elif clean[0] == 'ໄຊສົມບຸນ':
 						clean[0] = 'ໄຊສົມບູນ'
@@ -154,7 +156,7 @@ def Oil(event=None):
 root = Tk()
 root.geometry('1024x768')  # 1600x1200	4:3	# 1280x800 16:9	# 1280x720
 root.title('CEROD')
-root.iconbitmap('ICON.ico')
+root.iconbitmap('exchange.ico')
 
 laofont = ('Defago Noto Sans', 14)
 engfont = ('Times New Roman', 14)

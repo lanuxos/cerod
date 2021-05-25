@@ -18,8 +18,8 @@ def Oil():
 	resq = requests.get(imgurl)
 	result = resq.content
 	# image = Image.open(BytesIO(result))
-	# ocrlao=pytesseract.image_to_string(Image.open(BytesIO(result)), lang='lao')
-	ocrlao=pytesseract.image_to_string(Image.open(BytesIO(result)), lang='Laos')
+	ocrlao=pytesseract.image_to_string(Image.open(BytesIO(result)), lang='lao')
+	# ocrlao=pytesseract.image_to_string(Image.open(BytesIO(result)), lang='Laos')
 	# ocrlao=pytesseract.image_to_string(Image.open('../asset/oil.jpg'), lang='Laos')
 	linebreak = ocrlao.split('\n')
 	price=[]
@@ -37,8 +37,8 @@ def Oil():
 	for p in price:
 		print(p)
 	print('----')
-	for i,j in zip(pro, price):
-		j['pro'] = i
+	# for i,j in zip(pro, price):
+	# 	j['pro'] = i
 	for p in price:
 		print(p)
 	return price
